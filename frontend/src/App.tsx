@@ -1,19 +1,24 @@
 import axios from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function App() {
   const { register, handleSubmit } = useForm();
+  const [pdfUrl, setPdfUrl] = useState([]);
+  const [images, setImages] = useState([]);
 
   async function formInput(data) {
     console.log(data);
     const res = await axios.post("http://localhost:8000/generate-text", data);
     console.log(res);
+    setImages(res.data.imageUrls);
+    setPdfUrl(res.data.pdfUrls);
   }
 
   return (
     <>
-      <div className="vite-hero-bg">
-        <div className="flex items-center justify-center pt-24 flex-col">
+      <div className="bg-[#101010]">
+        <div className="flex items-center justify-center pt-24 flex-col vite-hero-bg2">
           <h1
             className="text-7xl font-semibold text-transparent bg-clip-text bg-gradient-to-b
            from-[#f4f4f4] to-[#C0C0C0]"
@@ -54,6 +59,16 @@ function App() {
               </button>
             </div>
           </form>
+        </div>
+        <div className="flex justify-center gap-20 pb-20 pt-10 vite-hero-bg">
+          {images.map((e, index) => (
+            <img
+              key={index}
+              src={e}
+              className="w-[310px] h-[407px] border border-white"
+              alt="hi"
+            />
+          ))}
         </div>
       </div>
     </>
