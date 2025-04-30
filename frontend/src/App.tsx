@@ -100,6 +100,7 @@ function App() {
               ))}
             </div>
             <button
+              onClick={() => setImages([])}
               className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500 text-white 
             font-semibold py-3 px-20 rounded-md border-t-[1px] border-white shadow-2xl hover:scale-[1.05] duration-300 transition-transform active:scale-105 mt-7"
             >
