@@ -13,6 +13,10 @@ app.use(
     origin: "*",
   })
 );
+app.use(
+  "/generated_files",
+  express.static(path.join(process.cwd(), "generated_files"))
+);
 
 const launchBrowser = async () => {
   const browser = await puppeteer.launch({ headless: true });
@@ -27,12 +31,31 @@ app.post("/generate-text", (req, res) => {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `Please generate a professional cover letter based on the following job description (${
-        body.jobDes
+        body.jobDescription
       }) and my resume (${
-        body.resume
-      }). The letter should adhere to standard cover letter format, ensuring that the content is clear, concise, and tailored to the job. The letter must include the following: 1. **Header**: Include my name, email, phone number, and location. 2. **Employer’s Details**: Include the employer's name, position (if available), company name, and address (omit if not available). 3. **Date**: use this date ${new Date().toDateString()}. 4. **Salutation**: Address as "Dear Hiring Manager" if no specific name is provided. 5. **Introduction**: Express enthusiasm for the role and interest in the company, mentioning your relevant skills and how they align with the position. Do not make it too long, please, please 6. **Body Paragraphs**: Focus on the technical skills and experiences that match the job requirements. Adapt your discussion around the technologies worked with. Mention specific projects or experiences where these skills were successfully applied, demonstrating your impact. Do not make it too long, please, please 7. **Closing Paragraph**: Reaffirm interest and availability. 8. **Closing Line**: End with "Sincerely," followed by name. The letter should be professional in tone, concise, and ready to send without any placeholders or notes. Please emphasize my technical skills and problem-solving abilities while maintaining authenticity. Important: - Do not make it too long. - No placeholders like "[Address if available]" in output. - The letter should be 100% ready to send - Keep it concise (one page max) - Use a professional tone - Avoid generic or placeholder text again i am sharing job description and resume content Here is the **Job Description**: ${
-        body.jobDes
-      } Here is my **Resume content**: ${body.resume},`,
+        body.resumeContent
+      }). The letter should adhere to standard cover letter format, ensuring that the content is clear, concise, 
+      and tailored to the job. The letter must include the following: 
+      1. **Header**: Include my name, email, phone number, and location. 
+      2. **Employers Details**: Include the employer's name, position (if available), 
+      company name, and address (omit if not available). 3. **Date**: use this date ${new Date().toDateString()}. 
+      4. **Salutation**: Address as "Dear Hiring Manager" if no specific name is provided. 
+      5. **Introduction**: Express enthusiasm for the role and interest in the company, mentioning your 
+      relevant skills and how they align with the position. Do not make it too long, please, please 
+      6. **Body Paragraphs**: Focus on the technical skills and experiences that match the job requirements. 
+      Adapt your discussion around the technologies worked with. Mention specific projects or experiences 
+      where these skills were successfully applied, demonstrating your impact. Do not make it too long, please, please 
+      7. **Closing Paragraph**: Reaffirm interest and availability. 
+      8. **Closing Line**: End with "Sincerely," followed by name. The letter should be professional in tone, 
+      concise, and ready to send without any placeholders or notes. 
+      Please emphasize my technical skills and problem-solving abilities 
+      while maintaining authenticity. 
+      Important: - Do not make it too long. - No placeholders like "[Address if available]" in output. 
+      - The letter should be 100% ready to send - Keep it concise (one page max) - Use a professional tone 
+      - Avoid generic or placeholder text again i am sharing job description and resume content Here is the 
+      **Job Description**: ${
+        body.jobDescription
+      } Here is my **Resume content**: ${body.resumeContent},`,
     });
     // console.log(response.text);
 
@@ -117,12 +140,12 @@ app.post("/generate-text", (req, res) => {
     res.status(200).json({
       message: "Cover letter generated successfully",
       pdfUrls: [
-        "http://localhost:3000/generated_files/output-basic.pdf",
-        "http://localhost:3000/generated_files/output-modern.pdf",
+        "http://localhost:8000/generated_files/output-basic.pdf",
+        "http://localhost:8000/generated_files/output-modern.pdf",
       ],
       imageUrls: [
-        "http://localhost:3000/generated_files/output-basic.jpg",
-        "http://localhost:3000/generated_files/output-modern.jpg",
+        "http://localhost:8000/generated_files/output-basic.jpg",
+        "http://localhost:8000/generated_files/output-modern.jpg",
       ],
     });
   }

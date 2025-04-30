@@ -32,6 +32,6 @@ body {
 
 .vite-hero-bg2 {
   background: radial-gradient(circle at 30% -70%, #26354e 25%, transparent 60%),
-    radial-gradient(circle at 70% -70%, #3c2550 25%, transparent 60%);
+    radial-gradient(circle at 70% -70%, #492b64 25%, transparent 60%);
   background-color: #101010; /* Optional fallback */
 }
