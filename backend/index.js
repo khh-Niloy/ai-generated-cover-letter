@@ -5,6 +5,7 @@ import cors from "cors";
 import { GoogleGenAI } from "@google/genai";
 import puppeteer from "puppeteer";
 import path from "path";
+const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
@@ -199,6 +200,10 @@ app.post("/generate-text", (req, res) => {
   }
 });
 
-app.listen(8000, () => {
+app.get("/", (req, res) => {
+  res.send("Welcome to, AI server");
+});
+
+app.listen(port, () => {
   console.log("Server is running at 8000");
 });
