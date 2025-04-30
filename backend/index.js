@@ -9,11 +9,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors());
 
 const launchBrowser = async () => {
   const browser = await puppeteer.launch({ headless: true });
