@@ -66,9 +66,9 @@ app.post("/generate-text", (req, res) => {
         <head>
           <style>
             body {
-              font-family: Arial, sans-serif;
-              padding: 30px;
-              font-size: 14px;
+              font-family: Calibri, sans-serif;
+              padding: 10px;
+              font-size: 15px;
               line-height: 1.5;
             }
           </style>
@@ -84,9 +84,9 @@ app.post("/generate-text", (req, res) => {
         <head>
           <style>
             body {
-              font-family: Arial, sans-serif;
-              padding: 30px;
-              font-size: 14px;
+              font-family: Calibri, sans-serif;
+              padding: 10px;
+              font-size: 15px;
               line-height: 1.5;
             }
           </style>
@@ -100,7 +100,7 @@ app.post("/generate-text", (req, res) => {
     const createImageAndPdf = async (html, imagePath, pdfPath, browser) => {
       const page = await browser.newPage();
       await page.setContent(html, { waitUntil: "networkidle0" });
-      await page.setViewport({ width: 794, height: 1123 });
+      await page.setViewport({ width: 612, height: 792 });
 
       await page.screenshot({
         path: imagePath,

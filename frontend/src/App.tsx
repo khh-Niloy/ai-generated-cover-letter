@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 function App() {
   const { register, handleSubmit } = useForm();
   const [pdfUrl, setPdfUrl] = useState([]);
   const [images, setImages] = useState([]);
   const [loading, setloading] = useState(false);
+  const [open, setopen] = useState(null);
 
   async function formInput(data) {
     console.log(data);
@@ -17,6 +20,9 @@ function App() {
     setImages(res.data.imageUrls);
     setPdfUrl(res.data.pdfUrls);
   }
+
+  const slides = images.map((e) => ({ src: e }));
+  console.log(slides);
 
   return (
     <>
@@ -74,14 +80,18 @@ function App() {
         )}
 
         {images.length > 0 && (
-          <div className="pb-20 pt-32 bg-[#101010] text-center">
+          <div className="pb-20 pt-24 bg-[#101010] text-center">
             <h1 className="text-white text-center text-4xl font-medium">
               Choose your cover letter
             </h1>
             <div className="flex justify-center gap-20 pt-16">
               {images.map((e, index) => (
-                <div key={index} className="flex flex-col">
+                <div key={index} className="flex flex-col relative">
+                  <h1 className="absolute bg-[#1B1C1E]/90 text-white text-xs px-3 py-2 rounded-lg top-3 left-3">
+                    Tap image to view full size
+                  </h1>
                   <img
+                    onClick={() => setopen(index)}
                     key={index}
                     src={e}
                     className="w-[310px] h-[407px] border border-white bg-white rounded-xl"
@@ -99,6 +109,14 @@ function App() {
                 </div>
               ))}
             </div>
+            {open != null && (
+              <Lightbox
+                open={open != null}
+                close={() => setopen(null)}
+                slides={slides}
+                index={open}
+              />
+            )}
             <button
               onClick={() => setImages([])}
               className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500 text-white 
