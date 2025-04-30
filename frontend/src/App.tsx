@@ -10,6 +10,8 @@ function App() {
   const [images, setImages] = useState([]);
   const [loading, setloading] = useState(false);
   const [open, setopen] = useState(null);
+  const [selectedCoverLetterImage, setselectedCoverLetterImage] = useState("");
+  const [selectedCoverLetterPDF, setselectedCoverLetterPDF] = useState("");
 
   async function formInput(data) {
     console.log(data);
@@ -79,10 +81,10 @@ function App() {
           </div>
         )}
 
-        {images.length > 0 && (
+        {images.length > 0 && selectedCoverLetterImage == "" ? (
           <div className="pb-20 pt-24 bg-[#101010] text-center">
             <h1 className="text-white text-center text-4xl font-medium">
-              Choose your cover letter
+              Select a Cover Letter Template
             </h1>
             <div className="flex justify-center gap-20 pt-16">
               {images.map((e, index) => (
@@ -97,15 +99,20 @@ function App() {
                     className="w-[310px] h-[407px] border border-white bg-white rounded-xl"
                     // alt={`cover letter ${index + 1}`}
                   />
-                  <a target="_blank" href={`${pdfUrl[index]}`}>
-                    <button
-                      className="bg-[#1B1C1E] bg-opacity-10 hover:bg-opacity-20
+                  {/* <a target="_blank" href={`${pdfUrl[index]}`}> */}
+                  <button
+                    onClick={() => {
+                      setselectedCoverLetterImage(e);
+                      setselectedCoverLetterPDF(`${pdfUrl[index]}`);
+                      setImages([]);
+                    }}
+                    className="bg-[#1B1C1E] bg-opacity-10 hover:bg-opacity-20
                    text-gray-200 font-medium py-2 px-6 rounded-lg border-[2px] border-[#232331] 
-                   transition-all duration-300 mt-6 cursor-pointer hover:bg-[#2e2f32] w-full"
-                    >
-                      Download PDF
-                    </button>
-                  </a>
+                   transition-all duration-300 mt-6 cursor-pointer hover:bg-[#393a3e] w-full"
+                  >
+                    Use This Template
+                  </button>
+                  {/* </a> */}
                 </div>
               ))}
             </div>
@@ -117,15 +124,43 @@ function App() {
                 index={open}
               />
             )}
-            <button
-              onClick={() => setImages([])}
-              className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500 text-white 
-            font-semibold py-3 px-20 rounded-md border-t-[1px] border-white shadow-2xl hover:scale-[1.05] duration-300 transition-transform active:scale-105 mt-7"
-            >
-              Generate again
-            </button>
           </div>
-        )}
+        ) : selectedCoverLetterImage.length > 0 ? (
+          <div className="pb-20 pt-24 bg-[#101010] text-center">
+            <h1 className="text-white text-4xl font-medium mb-10">
+              Here is your cover letter
+            </h1>
+            <div className="flex justify-center">
+              <img
+                src={selectedCoverLetterImage}
+                className="w-[310px] h-[407px] border border-white bg-white rounded-xl"
+              />
+            </div>
+            <div className="mt-5">
+              <a
+                href={selectedCoverLetterPDF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#1B1C1E] bg-opacity-10 hover:bg-opacity-20
+                   text-gray-200 font-medium py-3 px-20 rounded-lg border-[2px] border-[#232331] 
+                   transition-all duration-300 mt-6 cursor-pointer hover:bg-[#393a3e] w-full"
+              >
+                Download PDF
+              </a>
+              <button
+                onClick={() => {
+                  setImages([]);
+                  setselectedCoverLetterImage("");
+                  setselectedCoverLetterPDF("");
+                }}
+                className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500 text-white 
+            font-semibold py-3 px-20 rounded-md border-t-[1px] border-white shadow-2xl hover:scale-[1.05] duration-300 transition-transform active:scale-105 mt-7 ml-5"
+              >
+                Generate again
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </>
   );
