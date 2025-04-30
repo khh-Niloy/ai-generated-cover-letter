@@ -32,6 +32,7 @@ export default [
 
       // Disable react/prop-types rule
       "react/prop-types": "off",
+      "no-unused-vars": "off",
     },
   },
 ];

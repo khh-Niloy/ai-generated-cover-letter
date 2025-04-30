@@ -1,30 +1,47 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
 function App() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [pdfUrl, setPdfUrl] = useState([]);
   const [images, setImages] = useState([]);
+  const [slides, setslides] = useState([]);
   const [loading, setloading] = useState(false);
   const [open, setopen] = useState(null);
   const [selectedCoverLetterImage, setselectedCoverLetterImage] = useState("");
   const [selectedCoverLetterPDF, setselectedCoverLetterPDF] = useState("");
 
   async function formInput(data) {
-    console.log(data);
     setloading(true);
-    const res = await axios.post("http://localhost:8000/generate-text", data);
-    console.log(res);
-    setloading(false);
-    setImages(res.data.imageUrls);
-    setPdfUrl(res.data.pdfUrls);
+    try {
+      const res = await axios.post(`${process.env.URL}/generate-text`, data);
+      console.log(res);
+      setloading(false);
+      setImages(res.data.imageUrls);
+      setPdfUrl(res.data.pdfUrls);
+    } catch (error) {
+      if (error.message == "Network Error") {
+        setloading(false);
+        toast.error("The model is overloaded. Please try again later.");
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+      }
+    }
   }
 
-  const slides = images.map((e) => ({ src: e }));
-  console.log(slides);
+  useEffect(() => {
+    if (images.length > 0) {
+      setslides(images.map((img) => ({ src: img })));
+    }
+  }, [images]);
 
   return (
     <>
@@ -47,21 +64,41 @@ function App() {
           <form onSubmit={handleSubmit(formInput)} className="w-[70%]">
             <div className="flex gap-10 mt-20">
               <textarea
-                {...register("jobDescription")}
+                {...register("jobDescription", {
+                  required: "*Please provide the job description",
+                })}
                 rows={10}
                 placeholder="Paste the job description here..."
-                className="border-b placeholder:text-white/70 custom-scrollbar focus:outline-0 place-content-end resize-none
-                 text-white/90 bg-black/10 p-4 rounded-t-xl border-white/70 w-1/2"
+                className="relative border-b placeholder:text-white/70 custom-scrollbar focus:outline-0 place-content-end resize-none
+                   text-white/90 bg-black/10 p-4 rounded-t-xl border-white/70 w-1/2"
               />
+              {errors.jobDescription && (
+                <span
+                  className="text-md absolute bottom-8"
+                  style={{ color: "red" }}
+                >
+                  {errors.jobDescription.message}
+                </span>
+              )}
               <textarea
                 rows={10}
-                {...register("resumeContent")}
+                {...register("resumeContent", {
+                  required: "*Please provide the resume content",
+                })}
                 placeholder="Paste your resume content here..."
-                className="border-b placeholder:text-white/70 custom-scrollbar focus:outline-0 place-content-end resize-none
+                className="relative border-b placeholder:text-white/70 custom-scrollbar focus:outline-0 place-content-end resize-none
                  text-white/90 bg-black/10 p-4 rounded-t-xl border-white/70 w-1/2"
               />
+              {errors.resumeContent && (
+                <span
+                  className="text-md absolute bottom-3"
+                  style={{ color: "red" }}
+                >
+                  {errors.resumeContent.message}
+                </span>
+              )}
             </div>
-            <div className="py-10 text-center">
+            <div className="pb-10 pt-16 text-center">
               <button
                 className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500 text-white 
             font-semibold py-3 px-3 rounded-md border-t-[1px] border-white shadow-2xl hover:scale-[1.05] duration-300 transition-transform active:scale-105 mt-7"
@@ -97,22 +134,21 @@ function App() {
                     key={index}
                     src={e}
                     className="w-[310px] h-[407px] border border-white bg-white rounded-xl"
-                    // alt={`cover letter ${index + 1}`}
+                    alt={`cover letter ${index + 1}`}
                   />
-                  {/* <a target="_blank" href={`${pdfUrl[index]}`}> */}
                   <button
                     onClick={() => {
                       setselectedCoverLetterImage(e);
                       setselectedCoverLetterPDF(`${pdfUrl[index]}`);
                       setImages([]);
                     }}
+                    type="button"
                     className="bg-[#1B1C1E] bg-opacity-10 hover:bg-opacity-20
                    text-gray-200 font-medium py-2 px-6 rounded-lg border-[2px] border-[#232331] 
                    transition-all duration-300 mt-6 cursor-pointer hover:bg-[#393a3e] w-full"
                   >
                     Use This Template
                   </button>
-                  {/* </a> */}
                 </div>
               ))}
             </div>
