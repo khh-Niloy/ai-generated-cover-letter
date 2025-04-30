@@ -22,7 +22,10 @@ function App() {
   async function formInput(data) {
     setloading(true);
     try {
-      const res = await axios.post(`${process.env.URL}/generate-text`, data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_URL}/generate-text`,
+        data
+      );
       console.log(res);
       setloading(false);
       setImages(res.data.imageUrls);
@@ -32,6 +35,7 @@ function App() {
         setloading(false);
         toast.error("The model is overloaded. Please try again later.");
       } else {
+        setloading(false);
         toast.error("Something went wrong. Please try again later.");
       }
     }
