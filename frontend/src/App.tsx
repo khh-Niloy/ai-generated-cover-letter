@@ -22,7 +22,10 @@ function App() {
   async function formInput(data) {
     setloading(true);
     try {
-      const res = await axios.post(`/generate-text`, data);
+      const res = await axios.post(
+        `https://ai-generated-cover-letter-x5zk.vercel.app/generate-text`,
+        data
+      );
       console.log(res);
       setloading(false);
       setImages(res.data.imageUrls);
