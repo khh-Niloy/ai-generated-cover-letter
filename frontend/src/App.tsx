@@ -23,7 +23,7 @@ function App() {
     setloading(true);
     try {
       const res = await axios.post(
-        `https://backend-kappa-seven-42.vercel.app/generate-text`,
+        `https://backend-ecru-seven-22.vercel.app/generate-text`,
         data
       );
       console.log(res);

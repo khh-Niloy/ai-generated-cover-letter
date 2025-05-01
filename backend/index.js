@@ -5,22 +5,28 @@ import cors from "cors";
 import { GoogleGenAI } from "@google/genai";
 import puppeteer from "puppeteer";
 import path from "path";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "https://ai-generated-cover-letter.vercel.app",
-      "http://localhost:8000",
-      "http://localhost:5173",
-    ],
-    methods: ["GET", "POST", "OPTIONS"],
+    origin: ["*"],
     credentials: true,
     optionsSuccessStatus: 200,
   })
 );
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true);
+//       return callback(null, origin);
+//     },
+
+//     credentials: true,
+//   })
+// );
 
 const launchBrowser = async () => {
   const browser = await puppeteer.launch({ headless: true });
