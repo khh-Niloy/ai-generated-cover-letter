@@ -9,7 +9,18 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://ai-generated-cover-letter.vercel.app",
+      "http://localhost:8000",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
 const launchBrowser = async () => {
   const browser = await puppeteer.launch({ headless: true });

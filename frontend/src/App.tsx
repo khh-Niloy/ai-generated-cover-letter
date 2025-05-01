@@ -23,7 +23,7 @@ function App() {
     setloading(true);
     try {
       const res = await axios.post(
-        `https://ai-generated-cover-letter-x5zk.vercel.app/generate-text`,
+        `https://backend-kappa-seven-42.vercel.app/generate-text`,
         data
       );
       console.log(res);
