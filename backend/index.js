@@ -194,9 +194,9 @@ app.post("/generate-text", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Welcome to, AI server");
+  res.send("Welcome to, AI cover letter server");
 });
 
 app.listen(port, () => {
-  console.log("Server is running at 8000");
+  console.log("Server is running");
 });
