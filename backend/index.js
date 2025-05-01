@@ -20,17 +20,6 @@ app.use(
   })
 );
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin) return callback(null, true);
-//       return callback(null, origin);
-//     },
-
-//     credentials: true,
-//   })
-// );
-
 const launchBrowser = async () => {
   const browser = await puppeteer.launch({
     args: chromium.args,

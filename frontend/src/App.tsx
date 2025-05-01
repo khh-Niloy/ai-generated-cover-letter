@@ -1,25 +1,30 @@
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
+type FormData = {
+  jobDescription: string;
+  resumeContent: string;
+};
+
 function App() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const [pdfUrl, setPdfUrl] = useState([]);
-  const [images, setImages] = useState([]);
-  const [slides, setslides] = useState([]);
+  } = useForm<FormData>();
+  const [pdfUrl, setPdfUrl] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
+  const [slides, setslides] = useState<{ src: string }[]>([]);
   const [loading, setloading] = useState(false);
-  const [open, setopen] = useState(null);
+  const [open, setopen] = useState<number | null>(null);
   const [selectedCoverLetterImage, setselectedCoverLetterImage] = useState("");
   const [selectedCoverLetterPDF, setselectedCoverLetterPDF] = useState("");
 
-  async function formInput(data) {
+  async function formInput(data: FormData) {
     setloading(true);
     try {
       const res = await axios.post(
@@ -30,7 +35,7 @@ function App() {
       setloading(false);
       setImages(res.data.imageUrls);
       setPdfUrl(res.data.pdfUrls);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message == "Network Error") {
         setloading(false);
         toast.error("The model is overloaded. Please try again later.");
