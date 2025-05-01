@@ -3,11 +3,14 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { GoogleGenAI } from "@google/genai";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import path from "path";
 const port = process.env.PORT || 8000;
+import fs from "fs/promises";
 
 const app = express();
+app.use("/generated_files", express.static("/tmp"));
 app.use(express.json());
 app.use(
   cors({
@@ -29,7 +32,12 @@ app.use(
 // );
 
 const launchBrowser = async () => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+  });
   return browser;
 };
 
@@ -169,7 +177,7 @@ app.post("/generate-text", (req, res) => {
 
       const browser = await launchBrowser();
 
-      const dir = path.join(process.cwd(), "generated_files");
+      const dir = "/tmp";
       const basicImagePath = path.join(dir, "output-basic.jpg");
       const modernImagePath = path.join(dir, "output-modern.jpg");
       const basicPdfPath = path.join(dir, "output-basic.pdf");
@@ -187,13 +195,21 @@ app.post("/generate-text", (req, res) => {
 
       res.status(200).json({
         message: "Cover letter generated successfully",
-        pdfUrls: [
-          `${process.env.URL}/generated_files/output-basic.pdf`,
-          `${process.env.URL}/generated_files/output-modern.pdf`,
-        ],
         imageUrls: [
-          `${process.env.URL}/generated_files/output-basic.jpg`,
-          `${process.env.URL}/generated_files/output-modern.jpg`,
+          `${req.protocol}://${req.get(
+            "host"
+          )}/generated_files/output-basic.jpg`,
+          `${req.protocol}://${req.get(
+            "host"
+          )}/generated_files/output-modern.jpg`,
+        ],
+        pdfUrls: [
+          `${req.protocol}://${req.get(
+            "host"
+          )}/generated_files/output-basic.pdf`,
+          `${req.protocol}://${req.get(
+            "host"
+          )}/generated_files/output-modern.pdf`,
         ],
       });
     }
@@ -211,7 +227,7 @@ app.post("/generate-text", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Welcome to, AI cover letter server");
+  res.send("Welcome to, AI cover letter server!!!");
 });
 
 app.listen(port, () => {
