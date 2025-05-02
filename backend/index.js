@@ -14,7 +14,10 @@ app.use("/generated_files", express.static("/tmp"));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["*"],
+    origin: [
+      "https://ai-generated-cover-letter.vercel.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
